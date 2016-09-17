@@ -1,6 +1,10 @@
 # freebsd-ports-overlay
 
-# Prerequities
+This repository is a port overlay. It aims to provide some ports missing to the FreeBSD official port tree. 
+Note that some ports might not be well maintained!
+Therefore you are allowed and encouraged to create your own (official/unoffical) ports based on this repository. :-)
+
+# Prerequisites
 
 In order to use the ports in this repository, you will have to install [portshaker(8)](http://www.freshports.org/ports-mgmt/portshaker/) and its configuration files, be sure you are selecting the HASKELL option:
 

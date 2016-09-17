@@ -24,6 +24,7 @@ zfs create mypool/var/cache/
 zfs create mypool/var/cache/portshaker
 ```
 Then configure the compression to obtain the best performances.
+The mount point `mypool/usr/ports` must exists.
 
 # Install
 
@@ -34,12 +35,13 @@ We need to configure portshaker.
 Edit `/usr/local/etc/portshaker.conf`  and add a new repository via these two lines
 ```sh
 gdolle_ports_tree="/usr/ports"
-gdolle_merge_from="github:gdolle:freebsd_ports_overlay"
+gdolle_merge_from="ports github:gdolle:freebsd_ports_overlay"
 ```
-Note that `gdolle` is a prefix. Add this new repository to the ports tree 
-which will be merged. Edit the variable `port_trees` and add the prefix to the existing ones.
+This will merge the system ports from portsnap, and this github repository.
+Note that `gdolle` is just a prefix. Edit the variable `port_trees` to use this
+configuration
 ```sh
-ports_trees="prefix1 prefix2 ... gdolle"
+ports_trees="gdolle"
 ```
 
 Finally update portshaker and merge ports
@@ -47,10 +49,14 @@ Finally update portshaker and merge ports
 portshaker -U
 portshaker -M
 ```
+The `/usr/ports` directory should be updated with the new merge.
 
 Remark 1: In this example, the `/usr/local/etc/portshaker.d/github` script is used by parsing the `gdolle_merge_from=..` variable.
 
-Remark 2: Currently, a password is asked each time, you might want to use the next method.
+Remark 2: If you use zfs, the mountpoint `/usr/ports` must exist beforehand, otherwise the port trees prefix will be
+used instead.
+
+Remark 3: Currently, a password is asked each time, you might want to use the next method.
 
 ## Second way
 
@@ -64,8 +70,6 @@ Create a new file in `/usr/local/etc/portshaker.d/` for our new repository. We n
 username="gdolle"
 project="freebsd-ports-overlay"
 
-extra_info=":${username}:${project}"
-
 if [ "$1" != '--' ]; then
         err 1 "Extra arguments"
 fi
@@ -77,18 +81,19 @@ git_branch=${git_branch:=master}
 
 run_portshaker_command $*
 ```
-then as before, we edit the `/usr/local/etc/portshaker.conf` file and add the repository
+then as before, we edit the `/usr/local/etc/portshaker.conf` file and add the new merge repositories
 
 ```sh
 gdolle_ports_tree="/usr/ports"
-gdolle_merge_from="gdolle_github"
+gdolle_merge_from="ports gdolle_github"
 ```
-Then we add it to the existing port trees
+Then we use the new configuration
 ```sh
-ports_trees="prefix1 prefix2 ... gdolle"
+ports_trees="gdolle"
 ```
 Finally update portshaker and merge ports
 ```sh
 portshaker -U
 portshaker -M
 ```
+The `/usr/ports` directory should be updated with the new merge now!

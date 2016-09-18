@@ -11,10 +11,6 @@ VERBOSE_BUILD_DESC=	Show compiler messages
 
 .include "${.CURDIR}/../boost-all/compiled.mk"
 
-.if ${ARCH} == "sparc64"
-CXXFLAGS=	-O0
-.endif
-
 LIB_DEPENDS+=	libboost_serialization.so:${PORTSDIR}/devel/boost-libs
 
 BUILD_DEPENDS+=	${BJAM}:${PORTSDIR}/devel/boost-jam
@@ -39,4 +35,4 @@ post-install:
 	@${CAT} ${PKG_MESSAGE_FILE_THREADS} >> ${PKGMESSAGE}
 	@${ECHO_CMD} >> ${PKGMESSAGE}
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

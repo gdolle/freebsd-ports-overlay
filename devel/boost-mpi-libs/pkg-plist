@@ -1,4 +1,6 @@
 lib/libboost_mpi.a
 lib/libboost_mpi.so
-lib/libboost_mpi.so.%%COMPAT_LIB_VER%%
 lib/libboost_mpi.so.%%BOOST_SHARED_LIB_VER%%
+lib/libboost_serialization.a
+lib/libboost_serialization.so
+lib/libboost_serialization.so.%%BOOST_SHARED_LIB_VER%%

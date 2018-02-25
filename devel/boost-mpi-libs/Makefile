@@ -1,8 +1,8 @@
-# Created by: Alexander Churanov <churanov.port.maintainer@gmail.com>
+# Created by: Guillaume Dolle <dolle.guillaume@gmail.com>
 # $FreeBSD: head/devel/boost-mpi-libs/Makefile 371280 2014-10-20 16:04:12Z mva $
 
 PORTNAME=	boost-mpi-libs
-COMMENT=	Framework for interfacing Python and C++
+COMMENT=	Framework for interfacing MPI and C++
 
 OPTIONS_DEFINE=	VERBOSE_BUILD DEBUG OPTIMIZED_CFLAGS
 VERBOSE_BUILD_DESC=	Show compiler messages
@@ -11,18 +11,14 @@ VERBOSE_BUILD_DESC=	Show compiler messages
 
 .include "${.CURDIR}/../boost-all/compiled.mk"
 
-LIB_DEPENDS+=	libboost_serialization.so:${PORTSDIR}/devel/boost-libs
+LIB_DEPENDS+=	libboost_serialization.so:devel/boost-libs
+MAKE_ARGS+= --with-python
+ALL_TARGET= stage
 
-BUILD_DEPENDS+=	${BJAM}:${PORTSDIR}/devel/boost-jam
+BUILD_DEPENDS+=	bjam:/devel/boost-jam
 
-do-build:
+pre-build:
 	@${ECHO_CMD} "using mpi : " ${MPI_VER} " : " ${MPI_CMD} " : " ${MPI_INCLUDEDIR} ";" >> ${WRKSRC}/tools/build/v2/site-config.jam
-# build the library
-	@cd ${WRKSRC} && \
-		${BJAM} ${BJAM_ARGS} --with-mpi stage
-# do not break compat yet
-	@cd ${WRKSRC}/stage/lib && \
-		( for l in lib*.so.*; do ${LN} -sf $${l} $${l%.${PORTVERSION}}.5; done )
 
 do-install:
 	@cd ${WRKSRC}/stage/lib && ${PAX} -rw -p p libboost* ${STAGEDIR}${PREFIX}/lib
